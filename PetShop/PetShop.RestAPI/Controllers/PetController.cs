@@ -41,24 +41,29 @@ namespace PetShop.RestAPI.Controllers
             {
                 Pet petToAdd = PetService.CreatePet(pet.Name, pet.Type, pet.Birthdate, pet.Color, pet.Price);
 
-                if(!PetService.AddPet(petToAdd))
+                if (!PetService.AddPet(petToAdd))
                 {
                     return StatusCode(500, "Error saving pet to Database");
                 }
 
-                return true;
+                return Created("Pet created!", petToAdd);
             }
-            catch(ArgumentException ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(ex.Message);
             }
         }
 
         [HttpGet]
-        public IEnumerable<Pet> GetPets(string name)
+        public IEnumerable<Pet> Get(string name, bool sorted)
         {
             if (string.IsNullOrEmpty(name))
             {
+                if (sorted == true)
+                {
+                    return PetService.GetAllPetsByPrice();
+                }
+
                 return PetService.GetAllPets();
             }
             return PetService.GetPetByName(name);
@@ -68,11 +73,18 @@ namespace PetShop.RestAPI.Controllers
         public ActionResult<Pet> GetByID(int ID)
         {
             Pet pet = PetService.GetPetByID(ID);
-            if(pet != null)
+            if (pet != null)
             {
                 return pet;
             }
             return NotFound("No such pet found");
+        }
+
+
+        [HttpGet("Type/{PetType}")]
+        public IEnumerable<Pet> GetByType(petType PetType)
+        {
+            return PetService.GetPetByType(PetType);
         }
 
         [HttpPut("{ID}")]
