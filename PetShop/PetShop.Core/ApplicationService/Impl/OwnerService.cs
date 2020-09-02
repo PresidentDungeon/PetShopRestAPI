@@ -67,6 +67,27 @@ namespace PetShop.Core.ApplicationService.Impl
             return SearchEngine.Search<Owner>(GetAllOwners(), searchTitle);
         }
 
+        public List<Owner> GetOwnersFilterSearch(Filter filter)
+        {
+            IEnumerable<Owner> owners = OwnerRepository.ReadOwners();
+
+            if (!string.IsNullOrEmpty(filter.Name))
+            {
+                owners = SearchEngine.Search<Owner>(owners.ToList(), filter.Name);
+
+            }
+            if (!string.IsNullOrEmpty(filter.Sorting) && filter.Sorting.ToLower().Equals("asc"))
+            {
+                owners = from x in owners orderby x.FirstName+x.LastName select x;
+            }
+            else if (!string.IsNullOrEmpty(filter.Sorting) && filter.Sorting.ToLower().Equals("desc"))
+            {
+                owners = from x in owners orderby x.FirstName + x.LastName descending select x;
+            }
+
+            return owners.ToList();
+        }
+
         public Owner UpdateOwner(Owner owner, int ID)
         {
             if (GetOwnerByID(ID) == null)

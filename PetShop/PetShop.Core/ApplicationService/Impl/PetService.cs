@@ -80,6 +80,27 @@ namespace PetShop.Core.ApplicationService.Impl
             return (from x in GetAllPets() where x.Birthdate.Equals(date) select x).ToList();
         }
 
+        public List<Pet> GetPetsFilterSearch(Filter filter)
+        {
+            IEnumerable<Pet> pets = PetRepository.ReadPets();
+            
+            if (!string.IsNullOrEmpty(filter.Name))
+            {
+                pets = SearchEngine.Search<Pet>(pets.ToList(), filter.Name);
+
+            }
+            if (!string.IsNullOrEmpty(filter.Sorting) && filter.Sorting.ToLower().Equals("asc")) 
+            {
+                pets = from x in pets where x.Owner == null orderby x.Price select x;
+            }
+            else if (!string.IsNullOrEmpty(filter.Sorting) && filter.Sorting.ToLower().Equals("desc"))
+            {
+                pets = from x in pets where x.Owner == null orderby x.Price descending select x;
+            }
+
+            return pets.ToList();
+        }
+
         public Pet UpdatePet(Pet pet, int ID)
         {
             if (GetPetByID(ID) == null)
@@ -106,5 +127,6 @@ namespace PetShop.Core.ApplicationService.Impl
             }
             return PetRepository.DeletePet(ID);
         }
+
     }
 }

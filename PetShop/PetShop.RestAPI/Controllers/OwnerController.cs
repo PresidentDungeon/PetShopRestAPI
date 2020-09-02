@@ -42,18 +42,9 @@ namespace PetShop.RestAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Owner>> Get(string name)
+        public ActionResult<IEnumerable<Owner>> Get([FromQuery] Filter filter)
         {
-            IEnumerable<Owner> ownerEnumerable;
-
-            if (string.IsNullOrEmpty(name))
-            {
-                ownerEnumerable = OwnerService.GetAllOwners();
-            }
-            else
-            {
-                ownerEnumerable = OwnerService.GetOwnerByName(name);
-            }
+            IEnumerable<Owner> ownerEnumerable = OwnerService.GetOwnersFilterSearch(filter);
 
             if (ownerEnumerable.Count() <= 0)
             {

@@ -25,6 +25,8 @@ namespace PetShop.Core.ApplicationService
 
         List<Pet> GetPetByBirthdate(DateTime date);
 
+        List<Pet> GetPetsFilterSearch(Filter filter);
+
         Pet UpdatePet(Pet pet, int ID);
 
         bool DeletePet(int ID);

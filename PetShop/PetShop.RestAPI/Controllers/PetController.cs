@@ -61,25 +61,11 @@ namespace PetShop.RestAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Pet>> Get(string name, bool sorted)
+        public ActionResult<IEnumerable<Pet>> Get([FromQuery]Filter filter)
         {
-            IEnumerable<Pet> petEnumerable;
+            IEnumerable<Pet> petEnumerable = PetService.GetPetsFilterSearch(filter);
 
-            if (string.IsNullOrEmpty(name))
-            {
-                if (sorted == true)
-                {
-                    petEnumerable = PetService.GetAllPetsByPrice();
-                }
-
-                petEnumerable = PetService.GetAllPets();
-            }
-            else
-            {
-                petEnumerable = PetService.GetPetByName(name);
-            }
-
-            if(petEnumerable.Count() <= 0)
+            if (petEnumerable.Count() <= 0)
             {
                 return NoContent();
             }
