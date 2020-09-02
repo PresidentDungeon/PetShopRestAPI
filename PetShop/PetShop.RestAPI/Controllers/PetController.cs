@@ -26,7 +26,6 @@ namespace PetShop.RestAPI.Controllers
         [HttpPost]
         public ActionResult<Pet> CreatePet([FromBody] Pet pet)
         {
-
             try
             {
                 Pet petToAdd = PetService.CreatePet(pet.Name, pet.Type, pet.Birthdate, pet.Color, pet.Price);
@@ -110,8 +109,8 @@ namespace PetShop.RestAPI.Controllers
         {
             try
             {
-                Pet petToAdd = PetService.CreatePet(pet.Name, pet.Type, pet.Birthdate, pet.Color, pet.Price);
-                petToAdd.SoldDate = pet.SoldDate;
+                Pet petToAUpdate = PetService.CreatePet(pet.Name, pet.Type, pet.Birthdate, pet.Color, pet.Price);
+                petToAUpdate.SoldDate = pet.SoldDate;
 
                 if (pet.Owner != null)
                 {
@@ -126,9 +125,15 @@ namespace PetShop.RestAPI.Controllers
                     {
                         return BadRequest("No owner with that ID found");
                     }
-                    petToAdd.Owner = owner;
+                    petToAUpdate.Owner = owner;
                 }
-                return PetService.UpdatePet(petToAdd, ID);
+               Pet updatedPet = PetService.UpdatePet(petToAUpdate, ID);
+
+                if(updatedPet == null)
+                {
+                    return StatusCode(500, "Error updating pet in Database");
+                }
+                return Accepted(updatedPet);
             }
             catch (ArgumentException ex)
             {
@@ -144,7 +149,7 @@ namespace PetShop.RestAPI.Controllers
                 return NotFound("No pet with such ID found");
             }
 
-            return (PetService.DeletePet(ID)) ? Ok($"Pet with Id: {ID} successfully deleted") : StatusCode(500,$"Server error deleting customer with Id: {ID}");
+            return (PetService.DeletePet(ID)) ? Ok($"Pet with Id: {ID} successfully deleted") : StatusCode(500,$"Server error deleting pet with Id: {ID}");
         }
     }
 }

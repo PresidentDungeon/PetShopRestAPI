@@ -17,7 +17,7 @@ namespace PetShop.Core.ApplicationService
 
         List<Owner> GetOwnerByName(string searchTitle);
 
-        bool UpdateOwner(Owner owner, int ID);
+        Owner UpdateOwner(Owner owner, int ID);
 
         bool DeleteOwner(int ID);
     }

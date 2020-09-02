@@ -123,7 +123,7 @@ namespace PetShop.UI
 
                 if (ConfirmChoise())
                 {
-                    Console.WriteLine((OwnerService.UpdateOwner(newOwner, selectedOwner.ID)) ? "\nOwner was successfully updated!" : "\nError updating owner. Please try again...");
+                    Console.WriteLine((OwnerService.UpdateOwner(newOwner, selectedOwner.ID)!=null) ? "\nOwner was successfully updated!" : "\nError updating owner. Please try again...");
                 }
             }
         }

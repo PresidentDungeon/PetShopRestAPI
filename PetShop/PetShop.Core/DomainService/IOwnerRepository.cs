@@ -9,7 +9,7 @@ namespace PetShop.Core.DomainService
     {
         bool AddOwner(Owner owner);
         IEnumerable<Owner> ReadOwners();
-        bool UpdateOwner(Owner owner);
+        Owner UpdateOwner(Owner owner);
         bool DeleteOwner(int id);
     }
 }

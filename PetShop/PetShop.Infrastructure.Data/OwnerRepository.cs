@@ -31,7 +31,7 @@ namespace PetShop.Infrastructure.Data
             return Owners;
         }
 
-        public bool UpdateOwner(Owner owner)
+        public Owner UpdateOwner(Owner owner)
         {
             int index = ((List<Owner>)Owners).FindIndex((x) => { return x.ID == owner.ID; });
             if (index != -1)
@@ -46,9 +46,9 @@ namespace PetShop.Infrastructure.Data
 
                 Owners = newOwners;
 
-                return true;
+                return owner;
             }
-            return false;
+            return null;
         }
 
         public bool DeleteOwner(int ID)

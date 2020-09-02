@@ -67,14 +67,14 @@ namespace PetShop.Core.ApplicationService.Impl
             return SearchEngine.Search<Owner>(GetAllOwners(), searchTitle);
         }
 
-        public bool UpdateOwner(Owner owner, int ID)
+        public Owner UpdateOwner(Owner owner, int ID)
         {
             if (owner != null)
             {
                 owner.ID = ID;
                 return OwnerRepository.UpdateOwner(owner);
             }
-            return false;
+            return null;
         }
 
         public bool DeleteOwner(int ID)

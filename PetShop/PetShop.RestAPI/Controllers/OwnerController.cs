@@ -22,33 +22,86 @@ namespace PetShop.RestAPI.Controllers
         }
 
         [HttpPost]
-        public void CreateOwner([FromBody] Owner owner)
+        public ActionResult<Owner> CreateOwner([FromBody] Owner owner)
         {
-            OwnerService.AddOwner(owner);
+            try
+            {
+                Owner ownerToAdd = OwnerService.CreateOwner(owner.FirstName,owner.LastName,owner.Address,owner.PhoneNumber,owner.Email);
+
+                if (!OwnerService.AddOwner(ownerToAdd))
+                {
+                    return StatusCode(500, "Error saving pet to Database");
+                }
+
+                return Created("", ownerToAdd);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]
-        public IEnumerable<Owner> GetAllOwner()
+        public ActionResult<IEnumerable<Owner>> Get(string name)
         {
-            return OwnerService.GetAllOwners();
+            IEnumerable<Owner> ownerEnumerable;
+
+            if (string.IsNullOrEmpty(name))
+            {
+                ownerEnumerable = OwnerService.GetAllOwners();
+            }
+            else
+            {
+                ownerEnumerable = OwnerService.GetOwnerByName(name);
+            }
+
+            if (ownerEnumerable.Count() <= 0)
+            {
+                return NoContent();
+            }
+            return Ok(ownerEnumerable);
         }
 
         [HttpGet("{ID}")]
-        public Owner GetByID(int ID)
+        public ActionResult<Owner> GetByID(int ID)
         {
-            return OwnerService.GetOwnerByID(ID);
+            Owner owner = OwnerService.GetOwnerByID(ID);
+            if (owner != null)
+            {
+                return Ok(owner);
+            }
+            return NoContent();
         }
 
         [HttpPut("{ID}")]
-        public void UpdateByID(int ID, [FromBody] Owner owner)
+        public ActionResult<Owner> UpdateByID(int ID, [FromBody] Owner owner)
         {
-            OwnerService.UpdateOwner(owner, ID);
+            try
+            {
+                Owner ownerToUpdate = OwnerService.CreateOwner(owner.FirstName, owner.LastName, owner.Address, owner.PhoneNumber, owner.Email);
+                Owner updatedOwner = OwnerService.UpdateOwner(ownerToUpdate, ID);
+
+                if (updatedOwner == null)
+                {
+                    return StatusCode(500, "Error updating owner in Database");
+                }
+                return Accepted(updatedOwner);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{ID}")]
-        public void DeleteByID(int ID)
+        public ActionResult<bool> DeleteByID(int ID)
         {
-            OwnerService.DeleteOwner(ID);
+            if (OwnerService.GetOwnerByID(ID) == null)
+            {
+                return NotFound("No owner with such ID found");
+            }
+
+            return (OwnerService.DeleteOwner(ID)) ? Ok($"Owner with Id: {ID} successfully deleted") : StatusCode(500, $"Server error deleting owner with Id: {ID}");
         }
     }
 }
