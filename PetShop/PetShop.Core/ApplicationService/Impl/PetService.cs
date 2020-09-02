@@ -80,14 +80,18 @@ namespace PetShop.Core.ApplicationService.Impl
             return (from x in GetAllPets() where x.Birthdate.Equals(date) select x).ToList();
         }
 
-        public bool UpdatePet(Pet pet, int ID)
+        public Pet UpdatePet(Pet pet, int ID)
         {
-            if(pet != null)
+            if (GetPetByID(ID) == null)
             {
-                pet.ID = ID;
-                return PetRepository.UpdatePet(pet);
+                throw new ArgumentException("No pet with such ID found");
             }
-            return false;
+            if(pet == null)
+            {
+                throw new ArgumentException("Updating pet does not excist");
+            }
+            pet.ID = ID;
+            return PetRepository.UpdatePet(pet);
         }
 
         public bool DeletePet(int ID)

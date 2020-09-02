@@ -138,7 +138,7 @@ namespace PetShop.UI
 
                 if (ConfirmChoise())
                 {
-                    Console.WriteLine((PetService.UpdatePet(newPet, selectedPet.ID)) ? "\nPet was successfully updated!" : "\nError updating pet. Please try again...");
+                    Console.WriteLine((PetService.UpdatePet(newPet, selectedPet.ID) != null) ? "\nPet was successfully updated!" : "\nError updating pet. Please try again...");
                 }
             }
         }

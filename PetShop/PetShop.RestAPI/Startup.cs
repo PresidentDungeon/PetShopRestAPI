@@ -41,10 +41,13 @@ namespace PetShop.RestAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, InitStaticData initStaticData)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
-            initStaticData.InitData();
+            using(var scope = app.ApplicationServices.CreateScope())
+            {
+                InitStaticData dataInitilizer = scope.ServiceProvider.GetRequiredService<InitStaticData>();
+                dataInitilizer.InitData();
+            }
 
             if (env.IsDevelopment())
             {

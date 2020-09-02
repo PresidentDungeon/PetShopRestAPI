@@ -14,7 +14,7 @@ namespace PetShop.Core.ApplicationService.Impl
         {
             this.PetRepository = petRepository;
         }
-        public bool RegisterPet(Pet pet, Owner owner)
+        public Pet RegisterPet(Pet pet, Owner owner)
         {
             if(pet != null || owner != null)
             {
@@ -22,10 +22,10 @@ namespace PetShop.Core.ApplicationService.Impl
                 pet.SoldDate = DateTime.Now;
                 return PetRepository.UpdatePet(pet);
             }
-            return false;
+            return null;
         }
 
-        public bool UnregisterPet(Pet pet)
+        public Pet UnregisterPet(Pet pet)
         {
             pet.Owner = null;
             return PetRepository.UpdatePet(pet);

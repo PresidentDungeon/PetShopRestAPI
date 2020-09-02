@@ -57,7 +57,7 @@ namespace PetShop.UI
 
             if (ConfirmChoise())
             {
-                Console.WriteLine((PetExchangeService.UnregisterPet(pet)) ? "\nOwner successfully removed as owner to pet" : "\nError unregistering owner to pet. Please try again");
+                Console.WriteLine((PetExchangeService.UnregisterPet(pet) != null) ? "\nOwner successfully removed as owner to pet" : "\nError unregistering owner to pet. Please try again");
             }
         }
 
@@ -82,7 +82,7 @@ namespace PetShop.UI
 
             if (ConfirmChoise())
             {
-                Console.WriteLine((PetExchangeService.UnregisterPet(selectedPet)) ? "\nOwner successfully removed as owner to pet" : "\nError unregistering owner to pet. Please try again");
+                Console.WriteLine((PetExchangeService.UnregisterPet(selectedPet) != null) ? "\nOwner successfully removed as owner to pet" : "\nError unregistering owner to pet. Please try again");
             }
         }
     }

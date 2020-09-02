@@ -30,7 +30,7 @@ namespace PetShop.Infrastructure.Data
             return Pets;
         }
 
-        public bool UpdatePet(Pet pet)
+        public Pet UpdatePet(Pet pet)
         {
             int index = ((List<Pet>)Pets).FindIndex((x) => { return x.ID == pet.ID; });
             if (index != -1)
@@ -38,9 +38,9 @@ namespace PetShop.Infrastructure.Data
                 List<Pet> newPets = Pets.ToList();
                 newPets[index] = pet;
                 Pets = newPets;
-                return true;
+                return pet;
             }
-            return false;
+            return null;
         }
 
         public bool DeletePet(int ID)

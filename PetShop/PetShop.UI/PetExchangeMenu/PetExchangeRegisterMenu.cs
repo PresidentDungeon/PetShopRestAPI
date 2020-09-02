@@ -68,7 +68,7 @@ namespace PetShop.UI
            
             if(ConfirmChoise())
             {
-                Console.WriteLine((PetExchangeService.RegisterPet(pet, owner)) ? "\nPet successfully registered to owner" : "\nError registering pet to owner. Please try again");
+                Console.WriteLine((PetExchangeService.RegisterPet(pet, owner) != null) ? "\nPet successfully registered to owner" : "\nError registering pet to owner. Please try again");
             }
         }
 
@@ -106,7 +106,7 @@ namespace PetShop.UI
 
             if (ConfirmChoise())
             {
-                Console.WriteLine((PetExchangeService.RegisterPet(selectedPet, selectedOwner)) ? "\nPet successfully registered to owner" : "\nError registering pet to owner. Please try again");
+                Console.WriteLine((PetExchangeService.RegisterPet(selectedPet, selectedOwner) != null) ? "\nPet successfully registered to owner" : "\nError registering pet to owner. Please try again");
             }
         }
     }

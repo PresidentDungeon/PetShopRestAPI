@@ -7,8 +7,8 @@ namespace PetShop.Core.ApplicationService
 {
     public interface IPetExchangeService
     {
-        bool RegisterPet(Pet pet, Owner owner);
-        bool UnregisterPet(Pet pet);
+        Pet RegisterPet(Pet pet, Owner owner);
+        Pet UnregisterPet(Pet pet);
         List<Pet> ListAllPetsRegisteredToOwner(int ID);
         List<Pet> ListAllPetsWithOwner();
     }

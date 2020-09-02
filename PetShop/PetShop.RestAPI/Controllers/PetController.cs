@@ -15,38 +15,45 @@ namespace PetShop.RestAPI.Controllers
     public class PetController : ControllerBase
     {
         private IPetService PetService;
+        private IOwnerService OwnerService;
 
-        public PetController(IPetService petService)
+        public PetController(IPetService petService, IOwnerService ownerService)
         {
             this.PetService = petService;
+            this.OwnerService = ownerService;
         }
 
         [HttpPost]
-        public ActionResult<bool> CreatePet([FromBody] Pet pet)
+        public ActionResult<Pet> CreatePet([FromBody] Pet pet)
         {
-            if (string.IsNullOrEmpty(pet.Name))
-            {
-                return BadRequest("Entered pet name too short");
-            }
-            if (string.IsNullOrEmpty(pet.Color))
-            {
-                return BadRequest("Entered color description too short");
-            }
-            if (pet.Price < 0)
-            {
-                return BadRequest("Pet price can't be negative");
-            }
 
             try
             {
                 Pet petToAdd = PetService.CreatePet(pet.Name, pet.Type, pet.Birthdate, pet.Color, pet.Price);
+                petToAdd.SoldDate = pet.SoldDate;
+
+                if(pet.Owner != null)
+                {
+                    if(pet.Owner.ID <= 0)
+                    {
+                        return BadRequest("Owner ID can't be zero or negative");
+                    }
+
+                    Owner owner = OwnerService.GetOwnerByID(pet.Owner.ID);
+
+                    if(owner == null)
+                    {
+                        return BadRequest("No owner with that ID found");
+                    }
+                    petToAdd.Owner = owner;
+                }
 
                 if (!PetService.AddPet(petToAdd))
                 {
                     return StatusCode(500, "Error saving pet to Database");
                 }
 
-                return Created("Pet created!", petToAdd);
+                return Created("", petToAdd);
             }
             catch (ArgumentException ex)
             {
@@ -55,18 +62,29 @@ namespace PetShop.RestAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Pet> Get(string name, bool sorted)
+        public ActionResult<IEnumerable<Pet>> Get(string name, bool sorted)
         {
+            IEnumerable<Pet> petEnumerable;
+
             if (string.IsNullOrEmpty(name))
             {
                 if (sorted == true)
                 {
-                    return PetService.GetAllPetsByPrice();
+                    petEnumerable = PetService.GetAllPetsByPrice();
                 }
 
-                return PetService.GetAllPets();
+                petEnumerable = PetService.GetAllPets();
             }
-            return PetService.GetPetByName(name);
+            else
+            {
+                petEnumerable = PetService.GetPetByName(name);
+            }
+
+            if(petEnumerable.Count() <= 0)
+            {
+                return NoContent();
+            }
+            return Ok(petEnumerable);
         }
 
         [HttpGet("{ID}")]
@@ -77,7 +95,7 @@ namespace PetShop.RestAPI.Controllers
             {
                 return pet;
             }
-            return NotFound("No such pet found");
+            return NoContent();
         }
 
 
@@ -88,17 +106,29 @@ namespace PetShop.RestAPI.Controllers
         }
 
         [HttpPut("{ID}")]
-        public ActionResult<bool> UpdateByID(int ID, [FromBody] Pet pet)
+        public ActionResult<Pet> UpdateByID(int ID, [FromBody] Pet pet)
         {
-            if (PetService.GetPetByID(ID) == null)
-            {
-                return NotFound("No pet with such ID found");
-            }
-
             try
             {
-                Pet petToUpdate = PetService.CreatePet(pet.Name, pet.Type, pet.Birthdate, pet.Color, pet.Price);
-                return PetService.UpdatePet(petToUpdate, ID);
+                Pet petToAdd = PetService.CreatePet(pet.Name, pet.Type, pet.Birthdate, pet.Color, pet.Price);
+                petToAdd.SoldDate = pet.SoldDate;
+
+                if (pet.Owner != null)
+                {
+                    if (pet.Owner.ID <= 0)
+                    {
+                        return BadRequest("Owner ID can't be zero or negative");
+                    }
+
+                    Owner owner = OwnerService.GetOwnerByID(pet.Owner.ID);
+
+                    if (owner == null)
+                    {
+                        return BadRequest("No owner with that ID found");
+                    }
+                    petToAdd.Owner = owner;
+                }
+                return PetService.UpdatePet(petToAdd, ID);
             }
             catch (ArgumentException ex)
             {
@@ -114,7 +144,7 @@ namespace PetShop.RestAPI.Controllers
                 return NotFound("No pet with such ID found");
             }
 
-            return PetService.DeletePet(ID);
+            return (PetService.DeletePet(ID)) ? Ok($"Pet with Id: {ID} successfully deleted") : StatusCode(500,$"Server error deleting customer with Id: {ID}");
         }
     }
 }
