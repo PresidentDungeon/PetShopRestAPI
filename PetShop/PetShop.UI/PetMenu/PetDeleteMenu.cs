@@ -50,7 +50,14 @@ namespace PetShop.UI
 
                 if (ConfirmChoise())
                 {
-                    Console.WriteLine((PetService.DeletePet(ID) ? "\nPet was successfully deleted!" : "\nError deleting pet. Please try again..."));
+                    try
+                    {
+                        Console.WriteLine((PetService.DeletePet(ID) ? "\nPet was successfully deleted!" : "\nError deleting pet. Please try again..."));
+                    }
+                    catch(ArgumentException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
             }
         }

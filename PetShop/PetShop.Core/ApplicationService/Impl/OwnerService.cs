@@ -69,16 +69,28 @@ namespace PetShop.Core.ApplicationService.Impl
 
         public Owner UpdateOwner(Owner owner, int ID)
         {
-            if (owner != null)
+            if (GetOwnerByID(ID) == null)
             {
-                owner.ID = ID;
-                return OwnerRepository.UpdateOwner(owner);
+                throw new ArgumentException("No owner with such ID found");
             }
-            return null;
+            if (owner == null)
+            {
+                throw new ArgumentException("Updating owner does not excist");
+            }
+            owner.ID = ID;
+            return OwnerRepository.UpdateOwner(owner);
         }
 
         public bool DeleteOwner(int ID)
         {
+            if (ID <= 0)
+            {
+                throw new ArgumentException("Incorrect ID entered");
+            }
+            if (GetOwnerByID(ID) == null)
+            {
+                throw new ArgumentException("No owner with such ID found");
+            }
             return OwnerRepository.DeleteOwner(ID);
         }
     }

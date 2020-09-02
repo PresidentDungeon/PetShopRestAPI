@@ -149,7 +149,15 @@ namespace PetShop.RestAPI.Controllers
                 return NotFound("No pet with such ID found");
             }
 
-            return (PetService.DeletePet(ID)) ? Ok($"Pet with Id: {ID} successfully deleted") : StatusCode(500,$"Server error deleting pet with Id: {ID}");
+            try
+            {
+                return (PetService.DeletePet(ID)) ? Ok($"Pet with Id: {ID} successfully deleted") : StatusCode(500, $"Server error deleting pet with Id: {ID}");
+            }
+            catch(ArgumentException ex)
+            {
+               return StatusCode(500, $"Server error deleting pet with Id: {ID}");
+            }
+            
         }
     }
 }

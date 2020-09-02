@@ -70,7 +70,14 @@ namespace PetShop.UI
 
                 if (ConfirmChoise())
                 {
-                    Console.WriteLine((OwnerService.DeleteOwner(allOwners[selection - 1].ID) ? "\nOwner was successfully deleted!" : "\nError deleting owner. Please try again..."));
+                    try
+                    {
+                        Console.WriteLine((OwnerService.DeleteOwner(allOwners[selection - 1].ID) ? "\nOwner was successfully deleted!" : "\nError deleting owner. Please try again..."));
+                    }
+                    catch(ArgumentException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
             }
         }

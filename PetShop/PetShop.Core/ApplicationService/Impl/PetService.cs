@@ -96,6 +96,14 @@ namespace PetShop.Core.ApplicationService.Impl
 
         public bool DeletePet(int ID)
         {
+            if (ID <= 0)
+            {
+                throw new ArgumentException("Incorrect ID entered");
+            }
+            if (GetPetByID(ID) == null)
+            {
+                throw new ArgumentException("No pet with such ID found");
+            }
             return PetRepository.DeletePet(ID);
         }
     }

@@ -100,8 +100,14 @@ namespace PetShop.RestAPI.Controllers
             {
                 return NotFound("No owner with such ID found");
             }
-
-            return (OwnerService.DeleteOwner(ID)) ? Ok($"Owner with Id: {ID} successfully deleted") : StatusCode(500, $"Server error deleting owner with Id: {ID}");
+            try
+            {
+                return (OwnerService.DeleteOwner(ID)) ? Ok($"Owner with Id: {ID} successfully deleted") : StatusCode(500, $"Server error deleting owner with Id: {ID}");
+            }
+            catch(ArgumentException ex)
+            {
+                return StatusCode(500, $"Server error deleting owner with Id: {ID}");
+            }
         }
     }
 }
