@@ -56,7 +56,7 @@ namespace PetShop.RestAPI.Controllers
         [HttpGet("{ID}")]
         public ActionResult<Owner> GetByID(int ID)
         {
-            Owner owner = OwnerService.GetOwnerByID(ID);
+            Owner owner = OwnerService.GetOwnerByIDWithPets(ID);
             if (owner != null)
             {
                 return Ok(owner);

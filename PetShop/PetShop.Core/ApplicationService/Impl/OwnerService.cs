@@ -3,6 +3,7 @@ using PetShop.Core.Entities;
 using PetShop.Core.Search;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 
 namespace PetShop.Core.ApplicationService.Impl
@@ -10,11 +11,13 @@ namespace PetShop.Core.ApplicationService.Impl
     public class OwnerService: IOwnerService
     {
         private IOwnerRepository OwnerRepository;
+        private IPetRepository PetRepository;
         private ISearchEngine SearchEngine;
 
-        public OwnerService(IOwnerRepository ownerRepository, ISearchEngine searchEngine)
+        public OwnerService(IOwnerRepository ownerRepository, IPetRepository petRepository, ISearchEngine searchEngine)
         {
             this.OwnerRepository = ownerRepository;
+            this.PetRepository = petRepository;
             this.SearchEngine = searchEngine;
         }
 
@@ -59,7 +62,37 @@ namespace PetShop.Core.ApplicationService.Impl
 
         public Owner GetOwnerByID(int ID)
         {
-            return GetAllOwners().Where((x) => { return x.ID == ID; }).FirstOrDefault();
+            return GetAllOwners().Select(x => new Owner()
+            {
+                ID = x.ID,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                PhoneNumber = x.PhoneNumber,
+                Address = x.Address,
+                Email = x.Email
+            }).Where((x) => { return x.ID == ID; }).FirstOrDefault();
+        }
+
+        public Owner GetOwnerByIDWithPets(int ID)
+        {
+            Owner owner = GetOwnerByID(ID);
+            List<Pet> pets = (from x in PetRepository.ReadPets() where x.Owner != null && x.Owner.ID == ID select x).ToList();
+            owner.Pets = new List<Pet>();
+
+            foreach (Pet pet in pets)
+            {
+                owner.Pets.Add(new Pet
+                {
+                    ID = pet.ID,
+                    Name = pet.Name,
+                    Type = pet.Type,
+                    Birthdate = pet.Birthdate,
+                    SoldDate = pet.SoldDate,
+                    Color = pet.Color,
+                    Price = pet.Price
+                }) ;
+            }
+            return owner;
         }
 
         public List<Owner> GetOwnerByName(string searchTitle)
