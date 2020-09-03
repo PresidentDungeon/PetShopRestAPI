@@ -33,13 +33,11 @@ namespace PetShop.Infrastructure.Data
 
         public PetType UpdatePetType(PetType type)
         {
-            int index = ((List<PetType>)PetTypes).FindIndex((x) => { return x.ID == type.ID; });
-            if (index != -1)
+            PetType petType = ((List<PetType>)PetTypes).Find((x) => { return x.ID == type.ID; });
+            if (petType != null)
             {
-                List<PetType> newPetTypes = PetTypes.ToList();
-                newPetTypes[index] = type;
-                PetTypes = newPetTypes;
-                return type;
+                petType.Type = type.Type;
+                return petType;
             }
             return null;
         }

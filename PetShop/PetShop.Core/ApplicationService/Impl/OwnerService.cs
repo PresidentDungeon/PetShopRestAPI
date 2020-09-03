@@ -62,7 +62,12 @@ namespace PetShop.Core.ApplicationService.Impl
 
         public Owner GetOwnerByID(int ID)
         {
-            return GetAllOwners().Select(x => new Owner()
+            return GetAllOwners().Where((x) => { return x.ID == ID; }).FirstOrDefault();
+        }
+
+        public Owner GetOwnerByIDWithPets(int ID)
+        {
+            Owner owner = GetAllOwners().Select(x => new Owner()
             {
                 ID = x.ID,
                 FirstName = x.FirstName,
@@ -71,11 +76,7 @@ namespace PetShop.Core.ApplicationService.Impl
                 Address = x.Address,
                 Email = x.Email
             }).Where((x) => { return x.ID == ID; }).FirstOrDefault();
-        }
 
-        public Owner GetOwnerByIDWithPets(int ID)
-        {
-            Owner owner = GetOwnerByID(ID);
             List<Pet> pets = (from x in PetRepository.ReadPets() where x.Owner != null && x.Owner.ID == ID select x).ToList();
             owner.Pets = new List<Pet>();
 

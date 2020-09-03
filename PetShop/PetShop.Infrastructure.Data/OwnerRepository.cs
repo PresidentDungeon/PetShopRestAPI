@@ -31,22 +31,38 @@ namespace PetShop.Infrastructure.Data
             return Owners;
         }
 
+        //public Owner UpdateOwner(Owner owner)
+        //{
+        //    int index = ((List<Owner>)Owners).FindIndex((x) => { return x.ID == owner.ID; });
+        //    if (index != -1)
+        //    {
+        //        List<Owner> newOwners = Owners.ToList();
+
+        //        newOwners[index].FirstName = owner.FirstName;
+        //        newOwners[index].LastName = owner.LastName;
+        //        newOwners[index].Address = owner.Address;
+        //        newOwners[index].PhoneNumber = owner.PhoneNumber;
+        //        newOwners[index].Email = owner.Email;
+
+        //        Owners = newOwners;
+
+        //        return owner;
+        //    }
+        //    return null;
+        //}
+
         public Owner UpdateOwner(Owner owner)
         {
-            int index = ((List<Owner>)Owners).FindIndex((x) => { return x.ID == owner.ID; });
-            if (index != -1)
+            Owner ownerToUpdate = ((List<Owner>)Owners).Find((x) => { return x.ID == owner.ID; });
+            if (ownerToUpdate != null)
             {
-                List<Owner> newOwners = Owners.ToList();
+                ownerToUpdate.FirstName = owner.FirstName;
+                ownerToUpdate.LastName = owner.LastName;
+                ownerToUpdate.Address = owner.Address;
+                ownerToUpdate.PhoneNumber = owner.PhoneNumber;
+                ownerToUpdate.Email = owner.Email;
 
-                newOwners[index].FirstName = owner.FirstName;
-                newOwners[index].LastName = owner.LastName;
-                newOwners[index].Address = owner.Address;
-                newOwners[index].PhoneNumber = owner.PhoneNumber;
-                newOwners[index].Email = owner.Email;
-
-                Owners = newOwners;
-
-                return owner;
+                return ownerToUpdate;
             }
             return null;
         }
