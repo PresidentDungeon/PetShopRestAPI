@@ -31,26 +31,6 @@ namespace PetShop.Infrastructure.Data
             return Owners;
         }
 
-        //public Owner UpdateOwner(Owner owner)
-        //{
-        //    int index = ((List<Owner>)Owners).FindIndex((x) => { return x.ID == owner.ID; });
-        //    if (index != -1)
-        //    {
-        //        List<Owner> newOwners = Owners.ToList();
-
-        //        newOwners[index].FirstName = owner.FirstName;
-        //        newOwners[index].LastName = owner.LastName;
-        //        newOwners[index].Address = owner.Address;
-        //        newOwners[index].PhoneNumber = owner.PhoneNumber;
-        //        newOwners[index].Email = owner.Email;
-
-        //        Owners = newOwners;
-
-        //        return owner;
-        //    }
-        //    return null;
-        //}
-
         public Owner UpdateOwner(Owner owner)
         {
             Owner ownerToUpdate = ((List<Owner>)Owners).Find((x) => { return x.ID == owner.ID; });
