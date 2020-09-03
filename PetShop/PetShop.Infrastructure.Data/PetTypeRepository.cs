@@ -44,15 +44,15 @@ namespace PetShop.Infrastructure.Data
             return null;
         }
 
-        public bool DeletePetType(int ID)
+        public PetType DeletePetType(int ID)
         {
             PetType petType = PetTypes.Where((x) => { return x.ID == ID; }).FirstOrDefault();
             if (petType != null)
             {
                 ((List<PetType>)PetTypes).Remove(petType);
-                return true;
+                return petType;
             }
-            return false;
+            return null;
         }
     }
 }

@@ -78,24 +78,39 @@ namespace PetShop.RestAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Pet>> Get([FromQuery]Filter filter)
         {
-            IEnumerable<Pet> petEnumerable = PetService.GetPetsFilterSearch(filter);
-
-            if (petEnumerable.Count() <= 0)
+            try
             {
-                return NoContent();
+                IEnumerable<Pet> petEnumerable = PetService.GetPetsFilterSearch(filter);
+
+                if (petEnumerable.Count() <= 0)
+                {
+                    return NoContent();
+                }
+                return Ok(petEnumerable);
             }
-            return Ok(petEnumerable);
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error loading pets. Please try again...");
+            }
+
         }
 
         [HttpGet("{ID}")]
         public ActionResult<Pet> GetByID(int ID)
         {
-            Pet pet = PetService.GetPetByID(ID);
-            if (pet != null)
+            try
             {
-                return pet;
+                Pet pet = PetService.GetPetByID(ID);
+                if (pet != null)
+                {
+                    return Ok(pet);
+                }
+                return NotFound();
             }
-            return NoContent();
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPut("{ID}")]
@@ -117,10 +132,24 @@ namespace PetShop.RestAPI.Controllers
 
                     if (owner == null)
                     {
-                        return BadRequest("No owner with that ID found");
+                        return NotFound("No owner with that ID found");
                     }
                     petToAUpdate.Owner = owner;
                 }
+
+                if (pet.Type.ID <= 0)
+                    {
+                        return BadRequest("Pet type ID can't be zero or negative");
+                    }
+
+                    PetType type = PetTypeService.GetPetTypeByID(pet.Type.ID);
+
+                    if (type == null)
+                    {
+                        return NotFound("No pet type with that ID found");
+                    }
+                    petToAUpdate.Type = type;
+
                Pet updatedPet = PetService.UpdatePet(petToAUpdate, ID);
 
                 if(updatedPet == null)
@@ -136,7 +165,7 @@ namespace PetShop.RestAPI.Controllers
         }
 
         [HttpDelete("{ID}")]
-        public ActionResult<bool> DeleteByID(int ID)
+        public ActionResult<Pet> DeleteByID(int ID)
         {
             if (PetService.GetPetByID(ID) == null)
             {
@@ -145,7 +174,8 @@ namespace PetShop.RestAPI.Controllers
 
             try
             {
-                return (PetService.DeletePet(ID)) ? Ok($"Pet with Id: {ID} successfully deleted") : StatusCode(500, $"Server error deleting pet with Id: {ID}");
+                Pet pet = PetService.DeletePet(ID);
+                return (pet != null) ? Accepted(pet) : StatusCode(500, $"Server error deleting pet with Id: {ID}");
             }
             catch(ArgumentException ex)
             {

@@ -21,6 +21,6 @@ namespace PetShop.Core.ApplicationService
 
         PetType UpdatePetType(PetType type, int ID);
 
-        bool DeletePetType(int ID);
+        PetType DeletePetType(int ID);
     }
 }

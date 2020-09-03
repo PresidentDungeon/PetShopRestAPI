@@ -29,7 +29,7 @@ namespace PetShop.Core.ApplicationService
 
         Pet UpdatePet(Pet pet, int ID);
 
-        bool DeletePet(int ID);
+        Pet DeletePet(int ID);
 
     }
 }

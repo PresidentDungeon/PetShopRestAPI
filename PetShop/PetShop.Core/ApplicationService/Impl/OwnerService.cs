@@ -135,7 +135,7 @@ namespace PetShop.Core.ApplicationService.Impl
             return OwnerRepository.UpdateOwner(owner);
         }
 
-        public bool DeleteOwner(int ID)
+        public Owner DeleteOwner(int ID)
         {
             if (ID <= 0)
             {

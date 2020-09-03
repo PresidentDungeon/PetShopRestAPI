@@ -44,24 +44,39 @@ namespace PetShop.RestAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Owner>> Get([FromQuery] Filter filter)
         {
-            IEnumerable<Owner> ownerEnumerable = OwnerService.GetOwnersFilterSearch(filter);
-
-            if (ownerEnumerable.Count() <= 0)
+            try
             {
-                return NoContent();
+                IEnumerable<Owner> ownerEnumerable = OwnerService.GetOwnersFilterSearch(filter);
+
+                if (ownerEnumerable.Count() <= 0)
+                {
+                    return NoContent();
+                }
+                return Ok(ownerEnumerable);
             }
-            return Ok(ownerEnumerable);
+            
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error loading owners. Please try again...");
+            }
         }
 
         [HttpGet("{ID}")]
         public ActionResult<Owner> GetByID(int ID)
         {
-            Owner owner = OwnerService.GetOwnerByIDWithPets(ID);
-            if (owner != null)
+            try
             {
-                return Ok(owner);
+                Owner owner = OwnerService.GetOwnerByIDWithPets(ID);
+                if (owner != null)
+                {
+                    return Ok(owner);
+                }
+                return NotFound();
             }
-            return NoContent();
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPut("{ID}")]
@@ -93,7 +108,8 @@ namespace PetShop.RestAPI.Controllers
             }
             try
             {
-                return (OwnerService.DeleteOwner(ID)) ? Ok($"Owner with Id: {ID} successfully deleted") : StatusCode(500, $"Server error deleting owner with Id: {ID}");
+                Owner owner = OwnerService.DeleteOwner(ID);
+                return (owner != null) ? Accepted(owner) : StatusCode(500, $"Server error deleting owner with Id: {ID}");
             }
             catch(ArgumentException ex)
             {

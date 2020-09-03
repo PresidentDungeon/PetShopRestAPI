@@ -124,7 +124,7 @@ namespace PetShop.Core.ApplicationService.Impl
             return PetRepository.UpdatePet(pet);
         }
 
-        public bool DeletePet(int ID)
+        public Pet DeletePet(int ID)
         {
             if (ID <= 0)
             {

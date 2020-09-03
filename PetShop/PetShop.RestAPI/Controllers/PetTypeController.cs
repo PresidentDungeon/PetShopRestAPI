@@ -48,24 +48,40 @@ namespace PetShop.RestAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Pet>> Get([FromQuery]Filter filter)
         {
-            IEnumerable<PetType> petTypeEnumerable = PetTypeService.GetPetTypesFilterSearch(filter);
-
-            if (petTypeEnumerable.Count() <= 0)
+            try
             {
-                return NoContent();
+                IEnumerable<PetType> petTypeEnumerable = PetTypeService.GetPetTypesFilterSearch(filter);
+
+                if (petTypeEnumerable.Count() <= 0)
+                {
+                    return NoContent();
+                }
+                return Ok(petTypeEnumerable);
             }
-            return Ok(petTypeEnumerable);
+            catch(Exception ex)
+            {
+                return StatusCode(500, "Error loading pet types. Please try again...");
+            }
+            
         }
 
         [HttpGet("{ID}")]
         public ActionResult<PetType> GetByID(int ID)
         {
-            PetType type = PetTypeService.GetPetTypeByID(ID);
-            if (type != null)
+            try
             {
-                return type;
+                PetType type = PetTypeService.GetPetTypeByID(ID);
+                if (type != null)
+                {
+                    return Ok(type);
+                }
+                return NotFound();
             }
-            return NoContent();
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+           
         }
 
         [HttpPut("{ID}")]
@@ -98,7 +114,8 @@ namespace PetShop.RestAPI.Controllers
 
             try
             {
-                return (PetTypeService.DeletePetType(ID)) ? Ok($"Pet type with Id: {ID} successfully deleted") : StatusCode(500, $"Server error deleting pet type with Id: {ID}");
+                PetType petType = PetTypeService.DeletePetType(ID);
+                return (petType != null) ? Accepted(petType) : StatusCode(500, $"Server error deleting pet type with Id: {ID}");
             }
             catch(ArgumentException ex)
             {

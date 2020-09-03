@@ -28,34 +28,48 @@ namespace PetShop.RestAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Pet>> Get()
         {
-            IEnumerable<Pet> petEnumerable;
-            petEnumerable = PetExchangeService.ListAllPetsWithOwner();
-
-            if (petEnumerable.Count() <= 0)
+            try
             {
-                return NoContent();
+                IEnumerable<Pet> petEnumerable;
+                petEnumerable = PetExchangeService.ListAllPetsWithOwner();
+
+                if (petEnumerable.Count() <= 0)
+                {
+                    return NotFound();
+                }
+                return Ok(petEnumerable);
             }
-            return Ok(petEnumerable);
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error loading pets. Please try again...");
+            }
         }
 
         [HttpGet("{ID}")]
         public ActionResult<IEnumerable<Pet>> GetPetsByOwner(int ID)
         {
-            IEnumerable<Pet> petEnumerable;
-
-            Owner owner = OwnerService.GetOwnerByID(ID);
-            if (owner == null)
+            try
             {
-                return BadRequest("No owner with such an ID exists");
+                IEnumerable<Pet> petEnumerable;
+                Owner owner = OwnerService.GetOwnerByID(ID);
+                if (owner == null)
+                {
+                    return BadRequest("No owner with such an ID exists");
+                }
+
+                petEnumerable = PetExchangeService.ListAllPetsRegisteredToOwner(ID);
+
+                if (petEnumerable.Count() <= 0)
+                {
+                    return NotFound();
+                }
+                return Ok(petEnumerable);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
 
-            petEnumerable = PetExchangeService.ListAllPetsRegisteredToOwner(ID);
-
-            if (petEnumerable.Count() <= 0)
-            {
-                return NoContent();
-            }
-            return Ok(petEnumerable);
         }
 
         [HttpPost("{petID},{ownerID}")]
