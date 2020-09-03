@@ -10,18 +10,36 @@ namespace PetShop.Infrastructure.Data
     {
         private IPetRepository PetRepository;
         private IOwnerRepository OwnerRepository;
+        private IPetTypeRepository PetTypeRepository;
 
-        public InitStaticData(IPetRepository petRepository, IOwnerRepository ownerRepository)
+        public InitStaticData(IPetRepository petRepository, IOwnerRepository ownerRepository, IPetTypeRepository petTypeRepository)
         {
             this.PetRepository = petRepository;
             this.OwnerRepository = ownerRepository;
+            this.PetTypeRepository = petTypeRepository;
         }
         public void InitData()
         {
+            PetType cat = new PetType { Type = "Cat" };
+            PetType dog = new PetType { Type = "Dog" };
+            PetType fish = new PetType { Type = "Fish" };
+            PetType lizard = new PetType { Type = "Lizard" };
+            PetType tarantula = new PetType { Type = "Tarantula" };
+            PetType turtle = new PetType { Type = "Turtle" };
+            PetType goat = new PetType { Type = "Goat" };
+
+            PetTypeRepository.AddPetType(cat);
+            PetTypeRepository.AddPetType(dog);
+            PetTypeRepository.AddPetType(fish);
+            PetTypeRepository.AddPetType(lizard);
+            PetTypeRepository.AddPetType(tarantula);
+            PetTypeRepository.AddPetType(turtle);
+            PetTypeRepository.AddPetType(goat);
+
             PetRepository.AddPet(new Pet
             {
                 Name = "Hr. Dingles",
-                Type = petType.Cat,
+                Type = cat,
                 Birthdate = DateTime.Parse("29-03-2012"),
                 Color = "White with black stripes",
                 Price = 750.0
@@ -29,7 +47,7 @@ namespace PetShop.Infrastructure.Data
             PetRepository.AddPet(new Pet
             {
                 Name = "SlowPoke",
-                Type = petType.Turtle,
+                Type = turtle,
                 Birthdate = DateTime.Parse("15-01-1982"),
                 Color = "Dark green",
                 Price = 365.25
@@ -37,7 +55,7 @@ namespace PetShop.Infrastructure.Data
             PetRepository.AddPet(new Pet
             {
                 Name = "Leggy",
-                Type = petType.Tarantula,
+                Type = tarantula,
                 Birthdate = DateTime.Parse("05-08-2019"),
                 Color = "Brown with orange dots",
                 Price = 650.0

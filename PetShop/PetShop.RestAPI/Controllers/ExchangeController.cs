@@ -11,7 +11,7 @@ using PetShop.Infrastructure.Data;
 namespace PetShop.RestAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ExchangeController : ControllerBase
     {
         private IPetService PetService;

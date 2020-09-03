@@ -8,5 +8,6 @@ namespace PetShop.Core.Entities
     {
         public string Name { get; set; }
         public string Sorting { get; set; }
+        public string PetType { get; set; }
     }
 }

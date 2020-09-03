@@ -18,7 +18,7 @@ namespace PetShop.Core.ApplicationService.Impl
             this.SearchEngine = searchEngine;
         }
 
-        public Pet CreatePet(string petName, petType type, DateTime birthDate, string color, double price)
+        public Pet CreatePet(string petName, PetType type, DateTime birthDate, string color, double price)
         {
             if (string.IsNullOrEmpty(petName))
             {
@@ -31,6 +31,10 @@ namespace PetShop.Core.ApplicationService.Impl
             if(price < 0)
             {
                 throw new ArgumentException("Pet price can't be negative");
+            }
+            if(type == null)
+            {
+                throw new ArgumentException("The type of pet is invalid");
             }
 
             return new Pet { Name = petName, Type = type, Birthdate = birthDate, Color = color, Price = price };
@@ -65,9 +69,9 @@ namespace PetShop.Core.ApplicationService.Impl
             return GetAllPets().Where((x) => { return x.ID == ID; }).FirstOrDefault();
         }
 
-        public List<Pet> GetPetByType(petType type)
+        public List<Pet> GetPetByType(PetType type)
         {
-            return (from x in GetAllPets() where x.Type.Equals(type) select x).ToList();
+            return (from x in GetAllPets() where x.Type.ID.Equals(type.ID) select x).ToList();
         }
 
         public List<Pet> GetPetByName(string searchTitle)
@@ -87,6 +91,11 @@ namespace PetShop.Core.ApplicationService.Impl
             if (!string.IsNullOrEmpty(filter.Name))
             {
                 pets = SearchEngine.Search<Pet>(pets.ToList(), filter.Name);
+
+            }
+            if (!string.IsNullOrEmpty(filter.PetType))
+            {
+                pets = from x in pets where x.Type.Type.ToLower().Equals(filter.PetType.ToLower()) select x;
 
             }
             if (!string.IsNullOrEmpty(filter.Sorting) && filter.Sorting.ToLower().Equals("asc")) 

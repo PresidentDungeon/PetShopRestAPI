@@ -11,16 +11,18 @@ using PetShop.Infrastructure.Data;
 namespace PetShop.RestAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class PetController : ControllerBase
     {
         private IPetService PetService;
         private IOwnerService OwnerService;
+        private IPetTypeService PetTypeService;
 
-        public PetController(IPetService petService, IOwnerService ownerService)
+        public PetController(IPetService petService, IOwnerService ownerService, IPetTypeService petTypeService)
         {
             this.PetService = petService;
             this.OwnerService = ownerService;
+            this.PetTypeService = petTypeService;
         }
 
         [HttpPost]
@@ -46,6 +48,19 @@ namespace PetShop.RestAPI.Controllers
                     }
                     petToAdd.Owner = owner;
                 }
+
+                if(pet.Type == null)
+                {
+                    return BadRequest("No pet type selected");
+                }
+
+                PetType type = PetTypeService.GetPetTypeByID(pet.Type.ID);
+
+                if (type == null)
+                {
+                    return BadRequest("No pet type with that ID found");
+                }
+                petToAdd.Type = type;
 
                 if (!PetService.AddPet(petToAdd))
                 {
@@ -81,13 +96,6 @@ namespace PetShop.RestAPI.Controllers
                 return pet;
             }
             return NoContent();
-        }
-
-
-        [HttpGet("Type/{PetType}")]
-        public IEnumerable<Pet> GetByType(petType PetType)
-        {
-            return PetService.GetPetByType(PetType);
         }
 
         [HttpPut("{ID}")]

@@ -32,8 +32,10 @@ namespace PetShop.RestAPI
         {
             services.AddSingleton<IPetRepository, PetRepository> ();
             services.AddSingleton<IOwnerRepository, OwnerRepository>();
+            services.AddSingleton<IPetTypeRepository, PetTypeRepository>();
             services.AddScoped<IPetService, PetService>();
             services.AddScoped<IOwnerService, OwnerService>();
+            services.AddScoped<IPetTypeService, PetTypeService>();
             services.AddScoped<IPetExchangeService, PetExchangeService>();
             services.AddScoped<ISearchEngine, SearchEngine>();
             services.AddScoped<InitStaticData>();

@@ -7,7 +7,7 @@ namespace PetShop.Core.ApplicationService
 {
     public interface IPetService
     {
-        Pet CreatePet(string petName, petType type, DateTime birthDate, string color, double price);
+        Pet CreatePet(string petName, PetType type, DateTime birthDate, string color, double price);
 
         bool AddPet(Pet pet);
 
@@ -19,7 +19,7 @@ namespace PetShop.Core.ApplicationService
 
         Pet GetPetByID(int ID);
 
-        List<Pet> GetPetByType (petType type);
+        List<Pet> GetPetByType (PetType type);
 
         List<Pet> GetPetByName(string searchTitle);
 
@@ -30,7 +30,6 @@ namespace PetShop.Core.ApplicationService
         Pet UpdatePet(Pet pet, int ID);
 
         bool DeletePet(int ID);
-
 
     }
 }
