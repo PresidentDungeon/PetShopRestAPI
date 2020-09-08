@@ -25,20 +25,15 @@ namespace PetShop.Core.ApplicationService.Impl
             {
                 throw new ArgumentException("Entered pet name too short");
             }
-            
-            if (type == null)
-            {
-                throw new ArgumentException("The type of pet is invalid");
-            }
 
-            return new PetType {Type = type };
+            return new PetType {Name = type };
         }
 
         public bool AddPetType(PetType type)
         {
             if (type != null)
             {
-                if ((from x in GetAllPetTypes() where x.Type.ToLower().Equals(type.Type.ToLower()) select x).Count() > 0)
+                if ((from x in GetAllPetTypes() where x.Name.ToLower().Equals(type.Name.ToLower()) select x).Count() > 0)
                 {
                     throw new ArgumentException("Pet type with that name already exists");
                 }
@@ -73,11 +68,11 @@ namespace PetShop.Core.ApplicationService.Impl
             }
             if (!string.IsNullOrEmpty(filter.Sorting) && filter.Sorting.ToLower().Equals("asc"))
             {
-                types = from x in types orderby x.Type select x;
+                types = from x in types orderby x.Name select x;
             }
             else if (!string.IsNullOrEmpty(filter.Sorting) && filter.Sorting.ToLower().Equals("desc"))
             {
-                types = from x in types orderby x.Type descending select x;
+                types = from x in types orderby x.Name descending select x;
             }
 
             return types.ToList();

@@ -30,7 +30,7 @@ namespace PetShop.RestAPI.Controllers
         {
             try
             {
-                PetType petTypeToAdd = PetTypeService.CreatePetType(petType.Type);
+                PetType petTypeToAdd = PetTypeService.CreatePetType(petType.Name);
 
                 if (!PetTypeService.AddPetType(petTypeToAdd))
                 {
@@ -89,7 +89,7 @@ namespace PetShop.RestAPI.Controllers
         {
             try
             {
-                PetType petTypeToAUpdate = PetTypeService.CreatePetType(type.Type);
+                PetType petTypeToAUpdate = PetTypeService.CreatePetType(type.Name);
                PetType updatedPetType = PetTypeService.UpdatePetType(petTypeToAUpdate, ID);
 
                 if(updatedPetType == null)

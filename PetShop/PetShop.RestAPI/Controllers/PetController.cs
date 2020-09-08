@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using PetShop.Core.ApplicationService;
 using PetShop.Core.Entities;
-using PetShop.Infrastructure.Data;
 
 namespace PetShop.RestAPI.Controllers
 {
@@ -53,14 +50,6 @@ namespace PetShop.RestAPI.Controllers
                 {
                     return BadRequest("No pet type selected");
                 }
-
-                PetType type = PetTypeService.GetPetTypeByID(pet.Type.ID);
-
-                if (type == null)
-                {
-                    return BadRequest("No pet type with that ID found");
-                }
-                petToAdd.Type = type;
 
                 if (!PetService.AddPet(petToAdd))
                 {
@@ -109,7 +98,7 @@ namespace PetShop.RestAPI.Controllers
             }
             catch(Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, $"Error loading pet with ID: {ID}\nPlease try again...");
             }
         }
 
@@ -138,19 +127,16 @@ namespace PetShop.RestAPI.Controllers
                 }
 
                 if (pet.Type.ID <= 0)
-                    {
-                        return BadRequest("Pet type ID can't be zero or negative");
-                    }
+                {
+                    return BadRequest("Pet type ID can't be zero or negative");
+                }
 
-                    PetType type = PetTypeService.GetPetTypeByID(pet.Type.ID);
+                if (pet.Type == null)
+                {
+                    return BadRequest("No pet type selected");
+                }
 
-                    if (type == null)
-                    {
-                        return NotFound("No pet type with that ID found");
-                    }
-                    petToAUpdate.Type = type;
-
-               Pet updatedPet = PetService.UpdatePet(petToAUpdate, ID);
+                Pet updatedPet = PetService.UpdatePet(petToAUpdate, ID);
 
                 if(updatedPet == null)
                 {
@@ -179,9 +165,13 @@ namespace PetShop.RestAPI.Controllers
             }
             catch(ArgumentException ex)
             {
-               return StatusCode(500, $"Server error deleting pet with Id: {ID}");
+               return BadRequest(ex.Message);
             }
-            
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Server error deleting pet with Id: {ID}");
+            }
+
         }
     }
 }

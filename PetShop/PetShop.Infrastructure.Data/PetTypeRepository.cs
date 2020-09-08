@@ -36,7 +36,7 @@ namespace PetShop.Infrastructure.Data
             PetType petType = ((List<PetType>)PetTypes).Find((x) => { return x.ID == type.ID; });
             if (petType != null)
             {
-                petType.Type = type.Type;
+                petType.Name = type.Name;
                 return petType;
             }
             return null;

@@ -10,11 +10,13 @@ namespace PetShop.Core.ApplicationService.Impl
     public class PetService : IPetService
     {
         private IPetRepository PetRepository;
+        private IPetTypeRepository PetTypeRepository;
         private ISearchEngine SearchEngine;
 
-        public PetService(IPetRepository petRepository, ISearchEngine searchEngine)
+        public PetService(IPetRepository petRepository, IPetTypeRepository petTypeRepository, ISearchEngine searchEngine)
         {
             this.PetRepository = petRepository;
+            this.PetTypeRepository = petTypeRepository;
             this.SearchEngine = searchEngine;
         }
 
@@ -32,9 +34,24 @@ namespace PetShop.Core.ApplicationService.Impl
             {
                 throw new ArgumentException("Pet price can't be negative");
             }
-            if(type == null)
+            if(type == null )
             {
                 throw new ArgumentException("The type of pet is invalid");
+            }
+            else
+            {
+                if(PetTypeRepository.ReadTypes().Where((x) => { return x.ID == type.ID; }).FirstOrDefault() == null)
+                {
+                    throw new ArgumentException("No pet type with such an ID found");
+                }
+                else
+                {
+                    type = PetTypeRepository.ReadTypes().Where((x) => { return x.ID == type.ID; }).FirstOrDefault();
+                }
+            }
+            if((DateTime.Now.Year - birthDate.Year) > 150 || (DateTime.Now.Year - birthDate.Year) < 0)
+            {
+                throw new ArgumentException("Invalid birthdate selected");
             }
 
             return new Pet { Name = petName, Type = type, Birthdate = birthDate, Color = color, Price = price };
@@ -95,7 +112,7 @@ namespace PetShop.Core.ApplicationService.Impl
             }
             if (!string.IsNullOrEmpty(filter.PetType))
             {
-                pets = from x in pets where x.Type.Type.ToLower().Equals(filter.PetType.ToLower()) select x;
+                pets = from x in pets where x.Type.Name.ToLower().Equals(filter.PetType.ToLower()) select x;
 
             }
             if (!string.IsNullOrEmpty(filter.Sorting) && filter.Sorting.ToLower().Equals("asc")) 

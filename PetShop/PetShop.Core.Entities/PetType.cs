@@ -8,11 +8,11 @@ namespace PetShop.Core.Entities
     public class PetType: ISearchAble
     {
         public int ID { get; set; }
-        public string Type { get; set; }
+        public string Name { get; set; }
 
         public string searchValue()
         {
-            return Type;
+            return Name;
         }
     }
 }

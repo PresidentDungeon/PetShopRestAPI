@@ -20,13 +20,13 @@ namespace PetShop.Infrastructure.Data
         }
         public void InitData()
         {
-            PetType cat = new PetType { Type = "Cat" };
-            PetType dog = new PetType { Type = "Dog" };
-            PetType fish = new PetType { Type = "Fish" };
-            PetType lizard = new PetType { Type = "Lizard" };
-            PetType tarantula = new PetType { Type = "Tarantula" };
-            PetType turtle = new PetType { Type = "Turtle" };
-            PetType goat = new PetType { Type = "Goat" };
+            PetType cat = new PetType { Name = "Cat" };
+            PetType dog = new PetType { Name = "Dog" };
+            PetType fish = new PetType { Name = "Fish" };
+            PetType lizard = new PetType { Name = "Lizard" };
+            PetType tarantula = new PetType { Name = "Tarantula" };
+            PetType turtle = new PetType { Name = "Turtle" };
+            PetType goat = new PetType { Name = "Goat" };
 
             PetTypeRepository.AddPetType(cat);
             PetTypeRepository.AddPetType(dog);
