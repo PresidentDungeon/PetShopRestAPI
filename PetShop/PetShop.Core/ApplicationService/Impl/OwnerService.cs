@@ -77,23 +77,27 @@ namespace PetShop.Core.ApplicationService.Impl
                 Email = x.Email
             }).Where((x) => { return x.ID == ID; }).FirstOrDefault();
 
-            List<Pet> pets = (from x in PetRepository.ReadPets() where x.Owner != null && x.Owner.ID == ID select x).ToList();
-            owner.Pets = new List<Pet>();
-
-            foreach (Pet pet in pets)
+            if(owner != null)
             {
-                owner.Pets.Add(new Pet
+                List<Pet> pets = (from x in PetRepository.ReadPets() where x.Owner != null && x.Owner.ID == ID select x).ToList();
+                owner.Pets = new List<Pet>();
+
+                foreach (Pet pet in pets)
                 {
-                    ID = pet.ID,
-                    Name = pet.Name,
-                    Type = pet.Type,
-                    Birthdate = pet.Birthdate,
-                    SoldDate = pet.SoldDate,
-                    Color = pet.Color,
-                    Price = pet.Price
-                }) ;
+                    owner.Pets.Add(new Pet
+                    {
+                        ID = pet.ID,
+                        Name = pet.Name,
+                        Type = pet.Type,
+                        Birthdate = pet.Birthdate,
+                        SoldDate = pet.SoldDate,
+                        Color = pet.Color,
+                        Price = pet.Price
+                    });
+                }
+                return owner;
             }
-            return owner;
+            return null;
         }
 
         public List<Owner> GetOwnerByName(string searchTitle)

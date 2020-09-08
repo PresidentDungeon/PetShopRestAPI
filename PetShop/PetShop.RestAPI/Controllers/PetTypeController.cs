@@ -46,16 +46,12 @@ namespace PetShop.RestAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Pet>> Get([FromQuery]Filter filter)
+        public ActionResult<IEnumerable<PetType>> Get([FromQuery]Filter filter)
         {
             try
             {
                 IEnumerable<PetType> petTypeEnumerable = PetTypeService.GetPetTypesFilterSearch(filter);
 
-                if (petTypeEnumerable.Count() <= 0)
-                {
-                    return NoContent();
-                }
                 return Ok(petTypeEnumerable);
             }
             catch(Exception ex)
@@ -79,7 +75,7 @@ namespace PetShop.RestAPI.Controllers
             }
             catch(Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, $"Error loading pet type with ID: {ID}\nPlease try again...");
             }
            
         }

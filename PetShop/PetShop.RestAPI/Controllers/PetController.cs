@@ -70,11 +70,6 @@ namespace PetShop.RestAPI.Controllers
             try
             {
                 IEnumerable<Pet> petEnumerable = PetService.GetPetsFilterSearch(filter);
-
-                if (petEnumerable.Count() <= 0)
-                {
-                    return NoContent();
-                }
                 return Ok(petEnumerable);
             }
             catch (Exception ex)

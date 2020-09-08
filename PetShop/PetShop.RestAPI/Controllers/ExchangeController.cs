@@ -33,10 +33,6 @@ namespace PetShop.RestAPI.Controllers
                 IEnumerable<Pet> petEnumerable;
                 petEnumerable = PetExchangeService.ListAllPetsWithOwner();
 
-                if (petEnumerable.Count() <= 0)
-                {
-                    return NotFound();
-                }
                 return Ok(petEnumerable);
             }
             catch (Exception ex)
@@ -67,7 +63,7 @@ namespace PetShop.RestAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, "Error loading pets registered to owner. Please try again...");
             }
 
         }
@@ -89,6 +85,10 @@ namespace PetShop.RestAPI.Controllers
             }
             catch (ArgumentException ex)
             {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
                 return StatusCode(500, $"Server error when registering owner with Id: {ownerID} to pet with Id: {petID}");
             }
         }
@@ -108,6 +108,10 @@ namespace PetShop.RestAPI.Controllers
                 return (updatedPet != null) ? Accepted(updatedPet) : StatusCode(500, $"Server error when unregistering pet with Id: {petID}");
             }
             catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, $"Server error when unregistering pet with Id: {petID}");
             }

@@ -47,11 +47,6 @@ namespace PetShop.RestAPI.Controllers
             try
             {
                 IEnumerable<Owner> ownerEnumerable = OwnerService.GetOwnersFilterSearch(filter);
-
-                if (ownerEnumerable.Count() <= 0)
-                {
-                    return NoContent();
-                }
                 return Ok(ownerEnumerable);
             }
             
@@ -75,7 +70,7 @@ namespace PetShop.RestAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(500, $"Error loading owner with ID: {ID}\nPlease try again...");
             }
         }
 

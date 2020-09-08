@@ -22,13 +22,23 @@ namespace PetShop.Core.ApplicationService.Impl
                 pet.SoldDate = DateTime.Now;
                 return PetRepository.UpdatePet(pet);
             }
-            return null;
+            else
+            {
+                throw new ArgumentException("No pet or owner with such an ID found");
+            }
         }
 
         public Pet UnregisterPet(Pet pet)
         {
-            pet.Owner = null;
-            return PetRepository.UpdatePet(pet);
+            if (pet != null)
+            {
+                pet.Owner = null;
+                return PetRepository.UpdatePet(pet);
+            }
+            else
+            {
+                throw new ArgumentException("No pet with such an ID found");
+            }
         }
 
         public List<Pet> ListAllPetsRegisteredToOwner(int ID)
