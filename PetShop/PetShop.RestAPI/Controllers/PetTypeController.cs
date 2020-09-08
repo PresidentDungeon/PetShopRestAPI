@@ -51,7 +51,6 @@ namespace PetShop.RestAPI.Controllers
             try
             {
                 IEnumerable<PetType> petTypeEnumerable = PetTypeService.GetPetTypesFilterSearch(filter);
-
                 return Ok(petTypeEnumerable);
             }
             catch(Exception ex)
