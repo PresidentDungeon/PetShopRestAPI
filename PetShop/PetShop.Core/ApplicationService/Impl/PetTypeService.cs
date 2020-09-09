@@ -29,7 +29,7 @@ namespace PetShop.Core.ApplicationService.Impl
             return new PetType {Name = type };
         }
 
-        public bool AddPetType(PetType type)
+        public PetType AddPetType(PetType type)
         {
             if (type != null)
             {
@@ -39,7 +39,7 @@ namespace PetShop.Core.ApplicationService.Impl
                 }
                 return PetTypeRepository.AddPetType(type);
             }
-            return false;
+            return null;
         }
 
         public List<PetType> GetAllPetTypes()

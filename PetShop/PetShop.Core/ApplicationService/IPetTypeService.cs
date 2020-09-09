@@ -9,7 +9,7 @@ namespace PetShop.Core.ApplicationService
     {
         PetType CreatePetType(string type);
 
-        bool AddPetType(PetType petType);
+        PetType AddPetType(PetType petType);
 
         List<PetType> GetAllPetTypes();
 

@@ -7,8 +7,9 @@ namespace PetShop.Core.DomainService
 {
     public interface IPetRepository
     {
-        bool AddPet(Pet pet);
+        Pet AddPet(Pet pet);
         IEnumerable<Pet> ReadPets();
+        Pet GetPetByID(int ID);
         Pet UpdatePet(Pet pet);
         Pet DeletePet(int ID);
     }

@@ -18,12 +18,12 @@ namespace PetShop.Infrastructure.Data
             this.Owners = new List<Owner>();
         }
 
-        public bool AddOwner(Owner owner)
+        public Owner AddOwner(Owner owner)
         {
             ID++;
             owner.ID = ID;
             ((List<Owner>)Owners).Add(owner);
-            return true;
+            return owner;
         }
 
         public IEnumerable<Owner> ReadOwners()

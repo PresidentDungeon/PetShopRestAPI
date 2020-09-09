@@ -9,7 +9,7 @@ namespace PetShop.Core.ApplicationService
     {
         Owner CreateOwner(string firstName, string lastName, string address, string phoneNumber, string email);
 
-        bool AddOwner(Owner owner);
+        Owner AddOwner(Owner owner);
 
         List<Owner> GetAllOwners();
 

@@ -18,12 +18,12 @@ namespace PetShop.Infrastructure.Data
             this.PetTypes = new List<PetType>();
         }
 
-        public bool AddPetType(PetType type)
+        public PetType AddPetType(PetType type)
         {
             ID++;
             type.ID = ID;
             ((List<PetType>)PetTypes).Add(type);
-            return true;
+            return type;
         }
 
         public IEnumerable<PetType> ReadTypes()

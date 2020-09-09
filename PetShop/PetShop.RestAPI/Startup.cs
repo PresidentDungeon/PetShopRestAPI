@@ -6,15 +6,18 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using PetShop.Core.ApplicationService;
 using PetShop.Core.ApplicationService.Impl;
 using PetShop.Core.DomainService;
 using PetShop.Core.Search;
 using PetShop.Infrastructure.Data;
+using PetShop.Infrastructure.MSSQL.Data;
 
 namespace PetShop.RestAPI
 {
@@ -39,7 +42,14 @@ namespace PetShop.RestAPI
             services.AddScoped<IPetExchangeService, PetExchangeService>();
             services.AddScoped<ISearchEngine, SearchEngine>();
             services.AddScoped<InitStaticData>();
-            services.AddControllers();
+
+            services.AddControllers().AddNewtonsoftJson(options => 
+            { options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+              options.SerializerSettings.MaxDepth = 3; 
+            });
+
+            //services.AddDbContext<PetShopContext>(opt => { opt.UseSqlite("Data Source=PetShopApp.db"); });
+            //services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +57,10 @@ namespace PetShop.RestAPI
         {
             using(var scope = app.ApplicationServices.CreateScope())
             {
+                //var ctx = scope.ServiceProvider.GetService<PetShopContext>();
+                //ctx.Database.EnsureDeleted();
+                //ctx.Database.EnsureCreated();
+
                 InitStaticData dataInitilizer = scope.ServiceProvider.GetRequiredService<InitStaticData>();
                 dataInitilizer.InitData();
             }

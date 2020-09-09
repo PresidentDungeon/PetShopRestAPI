@@ -17,17 +17,22 @@ namespace PetShop.Infrastructure.Data
             this.Pets = new List<Pet>();
         }
 
-        public bool AddPet(Pet pet)
+        public Pet AddPet(Pet pet)
         {
             ID++;
             pet.ID = ID;
             ((List<Pet>)Pets).Add(pet);
-            return true;
+            return pet;
         }
 
         public IEnumerable<Pet> ReadPets()
         {
             return Pets;
+        }
+
+        public Pet GetPetByID(int ID)
+        {
+            return ReadPets().Where((x) => { return x.ID == ID; }).FirstOrDefault();
         }
 
         public Pet UpdatePet(Pet pet)
@@ -53,5 +58,6 @@ namespace PetShop.Infrastructure.Data
             }
             return null;
         }
+
     }
 }

@@ -57,13 +57,13 @@ namespace PetShop.Core.ApplicationService.Impl
             return new Pet { Name = petName, Type = type, Birthdate = birthDate, Color = color, Price = price };
         }
 
-        public bool AddPet(Pet pet)
+        public Pet AddPet(Pet pet)
         {
             if(pet != null)
             {
                 return PetRepository.AddPet(pet);
             }
-            return false;
+            return null;
         }
 
         public List<Pet> GetAllPets()
@@ -83,7 +83,7 @@ namespace PetShop.Core.ApplicationService.Impl
 
         public Pet GetPetByID(int ID)
         {
-            return GetAllPets().Where((x) => { return x.ID == ID; }).FirstOrDefault();
+            return PetRepository.GetPetByID(ID);
         }
 
         public List<Pet> GetPetByType(PetType type)

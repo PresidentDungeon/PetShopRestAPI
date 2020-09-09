@@ -46,13 +46,13 @@ namespace PetShop.Core.ApplicationService.Impl
             return new Owner { FirstName = firstName, LastName = lastName, Address = address, PhoneNumber = phoneNumber, Email = email };
         }
 
-        public bool AddOwner(Owner owner)
+        public Owner AddOwner(Owner owner)
         {
             if (owner != null)
             {
                 return OwnerRepository.AddOwner(owner);
             }
-            return false;
+            return null;
         }
 
         public List<Owner> GetAllOwners()

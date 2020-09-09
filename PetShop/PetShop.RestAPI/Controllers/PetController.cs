@@ -29,6 +29,7 @@ namespace PetShop.RestAPI.Controllers
             {
                 Pet petToAdd = PetService.CreatePet(pet.Name, pet.Type, pet.Birthdate, pet.Color, pet.Price);
                 petToAdd.SoldDate = pet.SoldDate;
+                Pet addedPet;
 
                 if(pet.Owner != null)
                 {
@@ -51,12 +52,14 @@ namespace PetShop.RestAPI.Controllers
                     return BadRequest("No pet type selected");
                 }
 
-                if (!PetService.AddPet(petToAdd))
+                addedPet = PetService.AddPet(petToAdd);
+
+                if (addedPet == null)
                 {
                     return StatusCode(500, "Error saving pet to Database");
                 }
 
-                return Created("", petToAdd);
+                return Created("", addedPet);
             }
             catch (ArgumentException ex)
             {
