@@ -31,7 +31,7 @@ namespace PetShop.Infrastructure.Data
             return Owners;
         }
 
-        Owner GetOwnerByID(int ID)
+        public Owner GetOwnerByID(int ID)
         {
             return ReadOwners().Where((x) => { return x.ID == ID; }).FirstOrDefault();
         }
