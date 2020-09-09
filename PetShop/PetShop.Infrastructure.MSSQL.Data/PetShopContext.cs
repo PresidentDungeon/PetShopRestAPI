@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PetShop.Infrastructure.MSSQL.Data
+namespace PetShop.Infrastructure.SQLLite.Data
 {
     public class PetShopContext : DbContext
     {

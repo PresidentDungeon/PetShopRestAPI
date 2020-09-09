@@ -9,6 +9,7 @@ namespace PetShop.Core.DomainService
     {
         PetType AddPetType(PetType type);
         IEnumerable<PetType> ReadTypes();
+        PetType GetPetTypeByID(int ID);
         PetType UpdatePetType(PetType type);
         PetType DeletePetType(int ID);
     }

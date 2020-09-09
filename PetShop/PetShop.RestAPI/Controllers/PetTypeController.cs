@@ -31,13 +31,14 @@ namespace PetShop.RestAPI.Controllers
             try
             {
                 PetType petTypeToAdd = PetTypeService.CreatePetType(petType.Name);
+                PetType addedPetType = PetTypeService.AddPetType(petTypeToAdd);
 
-                if (!PetTypeService.AddPetType(petTypeToAdd))
+                if (addedPetType == null)
                 {
                     return StatusCode(500, "Error saving pet to Database");
                 }
 
-                return Created("", petTypeToAdd);
+                return Created("", addedPetType);
             }
             catch (ArgumentException ex)
             {

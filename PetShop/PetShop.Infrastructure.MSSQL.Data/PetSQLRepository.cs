@@ -1,11 +1,11 @@
-﻿using PetShop.Core.DomainService;
+﻿½using PetShop.Core.DomainService;
 using PetShop.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PetShop.Infrastructure.MSSQL.Data
+namespace PetShop.Infrastructure.SQLLite.Data
 {
     public class PetSQLRepository : IPetRepository
     {
@@ -13,7 +13,6 @@ namespace PetShop.Infrastructure.MSSQL.Data
 
         public PetSQLRepository(PetShopContext ctx)
         {
-
             this.ctx = ctx;
         }
 
@@ -24,17 +23,9 @@ namespace PetShop.Infrastructure.MSSQL.Data
             return petCreated.Entity;
         }
 
-        public Pet DeletePet(int ID)
-        {
-            var removedPet = ctx.Pets.Remove(GetPetByID(ID));
-            ctx.SaveChanges();
-            return removedPet.Entity;
-
-        }
-
         public IEnumerable<Pet> ReadPets()
         {
-           return ctx.Pets.AsEnumerable();
+            return ctx.Pets.AsEnumerable();
         }
 
         public Pet GetPetByID(int ID)
@@ -47,6 +38,14 @@ namespace PetShop.Infrastructure.MSSQL.Data
             var updatedPet = ctx.Pets.Update(pet);
             ctx.SaveChanges();
             return updatedPet.Entity;
+        }
+
+        public Pet DeletePet(int ID)
+        {
+            var removedPet = ctx.Pets.Remove(GetPetByID(ID));
+            ctx.SaveChanges();
+            return removedPet.Entity;
+
         }
     }
 }

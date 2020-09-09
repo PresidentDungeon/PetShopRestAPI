@@ -49,7 +49,7 @@ namespace PetShop.Core.ApplicationService.Impl
 
         public PetType GetPetTypeByID(int ID)
         {
-            return GetAllPetTypes().Where((x) => { return x.ID == ID; }).FirstOrDefault();
+            return PetTypeRepository.GetPetTypeByID(ID);
         }
 
         public List<PetType> GetPetTypeByName(string searchTitle)

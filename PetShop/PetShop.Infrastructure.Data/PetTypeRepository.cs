@@ -31,6 +31,12 @@ namespace PetShop.Infrastructure.Data
             return PetTypes;
         }
 
+        public PetType GetPetTypeByID(int ID)
+        {
+            return ReadTypes().Where((x) => { return x.ID == ID; }).FirstOrDefault();
+        }
+
+
         public PetType UpdatePetType(PetType type)
         {
             PetType petType = ((List<PetType>)PetTypes).Find((x) => { return x.ID == type.ID; });

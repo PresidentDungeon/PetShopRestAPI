@@ -27,13 +27,14 @@ namespace PetShop.RestAPI.Controllers
             try
             {
                 Owner ownerToAdd = OwnerService.CreateOwner(owner.FirstName,owner.LastName,owner.Address,owner.PhoneNumber,owner.Email);
+                Owner addedOwner = OwnerService.AddOwner(ownerToAdd);
 
-                if (!OwnerService.AddOwner(ownerToAdd))
+                if (addedOwner == null)
                 {
                     return StatusCode(500, "Error saving pet to Database");
                 }
 
-                return Created("", ownerToAdd);
+                return Created("", addedOwner);
             }
             catch (ArgumentException ex)
             {

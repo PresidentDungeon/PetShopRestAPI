@@ -62,7 +62,7 @@ namespace PetShop.Core.ApplicationService.Impl
 
         public Owner GetOwnerByID(int ID)
         {
-            return GetAllOwners().Where((x) => { return x.ID == ID; }).FirstOrDefault();
+            return OwnerRepository.GetOwnerByID(ID);
         }
 
         public Owner GetOwnerByIDWithPets(int ID)
