@@ -17,7 +17,7 @@ using PetShop.Core.ApplicationService.Impl;
 using PetShop.Core.DomainService;
 using PetShop.Core.Search;
 using PetShop.Infrastructure.Data;
-using PetShop.Infrastructure.MSSQL.Data;
+using PetShop.Infrastructure.SQLLite.Data;
 
 namespace PetShop.RestAPI
 {
@@ -48,8 +48,9 @@ namespace PetShop.RestAPI
               options.SerializerSettings.MaxDepth = 3; 
             });
 
-            //services.AddDbContext<PetShopContext>(opt => { opt.UseSqlite("Data Source=PetShopApp.db"); });
-            //services.AddControllers();
+            services.AddDbContext<PetShopContext>(opt => { opt.UseSqlite("Data Source=PetShopApp.db"); });
+
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,13 +58,20 @@ namespace PetShop.RestAPI
         {
             using(var scope = app.ApplicationServices.CreateScope())
             {
-                //var ctx = scope.ServiceProvider.GetService<PetShopContext>();
+                var ctx = scope.ServiceProvider.GetService<PetShopContext>();
                 //ctx.Database.EnsureDeleted();
-                //ctx.Database.EnsureCreated();
+                ctx.Database.EnsureCreated();
 
                 InitStaticData dataInitilizer = scope.ServiceProvider.GetRequiredService<InitStaticData>();
                 dataInitilizer.InitData();
             }
+
+            // app.UseSwagger();
+
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "PetShop API");
+            //});
 
             if (env.IsDevelopment())
             {
