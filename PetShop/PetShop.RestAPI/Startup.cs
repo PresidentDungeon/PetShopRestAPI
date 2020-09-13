@@ -50,7 +50,14 @@ namespace PetShop.RestAPI
 
             services.AddDbContext<PetShopContext>(opt => { opt.UseSqlite("Data Source=PetShopApp.db"); });
 
-            services.AddSwaggerGen();
+            services.AddSwaggerGen((options) => {
+                options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo 
+                { 
+                    Title = "Pet Shop",
+                    Description = "A RestAPI for pet a pet exchange application"
+                    Version = "v1"
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,12 +73,12 @@ namespace PetShop.RestAPI
                 dataInitilizer.InitData();
             }
 
-            // app.UseSwagger();
+            app.UseSwagger();
 
-            //app.UseSwaggerUI(c =>
-            //{
-            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "PetShop API");
-            //});
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "PetShop API");
+            });
 
             if (env.IsDevelopment())
             {
