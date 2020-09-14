@@ -2,6 +2,7 @@
 using PetShop.Core.Entities;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace PetShop.Infrastructure.Data
@@ -40,7 +41,7 @@ namespace PetShop.Infrastructure.Data
             {
                 Name = "Hr. Dingles",
                 Type = cat,
-                Birthdate = DateTime.Parse("29-03-2012"),
+                Birthdate = DateTime.Parse("29-03-2012", CultureInfo.GetCultureInfo("da-DK").DateTimeFormat),
                 Color = "White with black stripes",
                 Price = 750.0
             });
@@ -48,7 +49,7 @@ namespace PetShop.Infrastructure.Data
             {
                 Name = "SlowPoke",
                 Type = turtle,
-                Birthdate = DateTime.Parse("15-01-1982"),
+                Birthdate = DateTime.Parse("15-01-1982", CultureInfo.GetCultureInfo("da-DK").DateTimeFormat),
                 Color = "Dark green",
                 Price = 365.25
             });
@@ -56,7 +57,7 @@ namespace PetShop.Infrastructure.Data
             {
                 Name = "Leggy",
                 Type = tarantula,
-                Birthdate = DateTime.Parse("05-08-2019"),
+                Birthdate = DateTime.Parse("05-08-2019", CultureInfo.GetCultureInfo("da-DK").DateTimeFormat),
                 Color = "Brown with orange dots",
                 Price = 650.0
             });

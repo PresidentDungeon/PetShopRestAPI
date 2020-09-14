@@ -54,7 +54,7 @@ namespace PetShop.RestAPI
                 options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo 
                 { 
                     Title = "Pet Shop",
-                    Description = "A RestAPI for pet a pet exchange application"
+                    Description = "A RestAPI for pet a pet exchange application",
                     Version = "v1"
                 });
             });
@@ -67,7 +67,7 @@ namespace PetShop.RestAPI
             {
                 var ctx = scope.ServiceProvider.GetService<PetShopContext>();
                 //ctx.Database.EnsureDeleted();
-                ctx.Database.EnsureCreated();
+                //ctx.Database.EnsureCreated();
 
                 InitStaticData dataInitilizer = scope.ServiceProvider.GetRequiredService<InitStaticData>();
                 dataInitilizer.InitData();
