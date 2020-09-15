@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PetShop.Core.ApplicationService;
@@ -26,6 +27,8 @@ namespace PetShop.RestAPI.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<Pet>), 200)]
+        [ProducesResponseType(500)]
         public ActionResult<IEnumerable<Pet>> Get()
         {
             try
@@ -42,6 +45,8 @@ namespace PetShop.RestAPI.Controllers
         }
 
         [HttpGet("{ID}")]
+        [ProducesResponseType(typeof(IEnumerable<Pet>), 200)]
+        [ProducesResponseType(400)][ProducesResponseType(404)][ProducesResponseType(500)]
         public ActionResult<IEnumerable<Pet>> GetPetsByOwner(int ID)
         {
             try
@@ -69,6 +74,8 @@ namespace PetShop.RestAPI.Controllers
         }
 
         [HttpPost("{petID},{ownerID}")]
+        [ProducesResponseType(typeof(Pet), 202)]
+        [ProducesResponseType(400)][ProducesResponseType(500)]
         public ActionResult<Pet> RegisterPet(int petID, int ownerID)
         {
             Pet petToRegister = PetService.GetPetByID(petID);
@@ -94,6 +101,8 @@ namespace PetShop.RestAPI.Controllers
         }
 
         [HttpPost("{petID}")]
+        [ProducesResponseType(typeof(Pet), 202)]
+        [ProducesResponseType(400)][ProducesResponseType(500)]
         public ActionResult<Pet> UnregisterPet(int petID)
         {
             Pet petToUnregister = PetService.GetPetByID(petID);
@@ -116,6 +125,5 @@ namespace PetShop.RestAPI.Controllers
                 return StatusCode(500, $"Server error when unregistering pet with Id: {petID}");
             }
         }
-
     }
 }

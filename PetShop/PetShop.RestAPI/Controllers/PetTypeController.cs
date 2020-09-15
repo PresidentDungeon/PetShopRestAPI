@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using PetShop.Core.ApplicationService;
 using PetShop.Core.Entities;
-using PetShop.Infrastructure.Data;
 
 namespace PetShop.RestAPI.Controllers
 {
@@ -14,19 +10,17 @@ namespace PetShop.RestAPI.Controllers
     [Route("api/[controller]")]
     public class PetTypeController : ControllerBase
     {
-        private IPetService PetService;
-        private IOwnerService OwnerService;
         private IPetTypeService PetTypeService;
 
-        public PetTypeController(IPetService petService, IOwnerService ownerService, IPetTypeService petTypeService)
+        public PetTypeController(IPetTypeService petTypeService)
         {
-            this.PetService = petService;
-            this.OwnerService = ownerService;
             this.PetTypeService = petTypeService;
         }
 
         [HttpPost]
-        public ActionResult<Pet> CreatePetType([FromBody] PetType petType)
+        [ProducesResponseType(typeof(PetType), 201)]
+        [ProducesResponseType(400)][ProducesResponseType(500)]
+        public ActionResult<PetType> CreatePetType([FromBody] PetType petType)
         {
             try
             {
@@ -47,6 +41,8 @@ namespace PetShop.RestAPI.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<PetType>), 200)]
+        [ProducesResponseType(500)]
         public ActionResult<IEnumerable<PetType>> Get([FromQuery]Filter filter)
         {
             try
@@ -58,10 +54,11 @@ namespace PetShop.RestAPI.Controllers
             {
                 return StatusCode(500, "Error loading pet types. Please try again...");
             }
-            
         }
 
         [HttpGet("{ID}")]
+        [ProducesResponseType(typeof(PetType), 200)]
+        [ProducesResponseType(404)][ProducesResponseType(500)]
         public ActionResult<PetType> GetByID(int ID)
         {
             try
@@ -77,16 +74,22 @@ namespace PetShop.RestAPI.Controllers
             {
                 return StatusCode(500, $"Error loading pet type with ID: {ID}\nPlease try again...");
             }
-           
         }
 
         [HttpPut("{ID}")]
+        [ProducesResponseType(typeof(PetType), 202)]
+        [ProducesResponseType(400)][ProducesResponseType(404)][ProducesResponseType(500)]
         public ActionResult<PetType> UpdateByID(int ID, [FromBody] PetType type)
         {
             try
             {
+                if (PetTypeService.GetPetTypeByID(ID) == null)
+                {
+                    return NotFound("No pet type with such ID found");
+                }
+
                 PetType petTypeToAUpdate = PetTypeService.CreatePetType(type.Name);
-               PetType updatedPetType = PetTypeService.UpdatePetType(petTypeToAUpdate, ID);
+                PetType updatedPetType = PetTypeService.UpdatePetType(petTypeToAUpdate, ID);
 
                 if(updatedPetType == null)
                 {
@@ -101,7 +104,9 @@ namespace PetShop.RestAPI.Controllers
         }
 
         [HttpDelete("{ID}")]
-        public ActionResult<bool> DeleteByID(int ID)
+        [ProducesResponseType(typeof(PetType), 202)]
+        [ProducesResponseType(400)][ProducesResponseType(500)]
+        public ActionResult<PetType> DeleteByID(int ID)
         {
             if (PetTypeService.GetPetTypeByID(ID) == null)
             {
@@ -117,7 +122,6 @@ namespace PetShop.RestAPI.Controllers
             {
                return StatusCode(500, $"Server error deleting pet type with Id: {ID}");
             }
-            
         }
     }
 }

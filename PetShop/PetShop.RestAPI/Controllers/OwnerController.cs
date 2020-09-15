@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using PetShop.Core.ApplicationService;
 using PetShop.Core.Entities;
-using PetShop.Infrastructure.Data;
 
 namespace PetShop.RestAPI.Controllers
 {
@@ -22,6 +18,8 @@ namespace PetShop.RestAPI.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(Owner), 201)]
+        [ProducesResponseType(400)][ProducesResponseType(500)]
         public ActionResult<Owner> CreateOwner([FromBody] Owner owner)
         {
             try
@@ -43,6 +41,8 @@ namespace PetShop.RestAPI.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<Owner>), 200)]
+        [ProducesResponseType(500)]
         public ActionResult<IEnumerable<Owner>> Get([FromQuery] Filter filter)
         {
             try
@@ -58,6 +58,8 @@ namespace PetShop.RestAPI.Controllers
         }
 
         [HttpGet("{ID}")]
+        [ProducesResponseType(typeof(Owner), 200)]
+        [ProducesResponseType(404)][ProducesResponseType(500)]
         public ActionResult<Owner> GetByID(int ID)
         {
             try
@@ -76,10 +78,17 @@ namespace PetShop.RestAPI.Controllers
         }
 
         [HttpPut("{ID}")]
+        [ProducesResponseType(typeof(Owner), 202)]
+        [ProducesResponseType(400)][ProducesResponseType(404)][ProducesResponseType(500)]
         public ActionResult<Owner> UpdateByID(int ID, [FromBody] Owner owner)
         {
             try
             {
+                if (OwnerService.GetOwnerByID(ID) == null)
+                {
+                    return NotFound("No owner with such ID found");
+                }
+
                 Owner ownerToUpdate = OwnerService.CreateOwner(owner.FirstName, owner.LastName, owner.Address, owner.PhoneNumber, owner.Email);
                 Owner updatedOwner = OwnerService.UpdateOwner(ownerToUpdate, ID);
 
@@ -96,7 +105,9 @@ namespace PetShop.RestAPI.Controllers
         }
 
         [HttpDelete("{ID}")]
-        public ActionResult<bool> DeleteByID(int ID)
+        [ProducesResponseType(typeof(Owner), 202)]
+        [ProducesResponseType(404)][ProducesResponseType(500)]
+        public ActionResult<Owner> DeleteByID(int ID)
         {
             if (OwnerService.GetOwnerByID(ID) == null)
             {
