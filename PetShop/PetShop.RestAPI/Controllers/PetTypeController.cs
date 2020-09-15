@@ -105,7 +105,7 @@ namespace PetShop.RestAPI.Controllers
 
         [HttpDelete("{ID}")]
         [ProducesResponseType(typeof(PetType), 202)]
-        [ProducesResponseType(400)][ProducesResponseType(500)]
+        [ProducesResponseType(400)][ProducesResponseType(404)][ProducesResponseType(500)]
         public ActionResult<PetType> DeleteByID(int ID)
         {
             if (PetTypeService.GetPetTypeByID(ID) == null)
@@ -118,9 +118,14 @@ namespace PetShop.RestAPI.Controllers
                 PetType petType = PetTypeService.DeletePetType(ID);
                 return (petType != null) ? Accepted(petType) : StatusCode(500, $"Server error deleting pet type with Id: {ID}");
             }
-            catch(ArgumentException ex)
+
+            catch (ArgumentException ex)
             {
-               return StatusCode(500, $"Server error deleting pet type with Id: {ID}");
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Server error deleting pet type with Id: {ID}");
             }
         }
     }
