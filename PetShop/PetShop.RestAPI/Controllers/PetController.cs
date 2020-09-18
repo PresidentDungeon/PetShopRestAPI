@@ -44,6 +44,7 @@ namespace PetShop.RestAPI.Controllers
                         return BadRequest("No owner with that ID found");
                     }
                     petToAdd.Owner = owner;
+                    petToAdd.SoldDate = DateTime.Now;
                 }
 
                 if(pet.Type == null)
@@ -109,13 +110,15 @@ namespace PetShop.RestAPI.Controllers
         {
             try
             {
-                if (PetService.GetPetByID(ID) == null)
+                Pet existingPet = PetService.GetPetByID(ID);
+
+                if (existingPet == null)
                 {
                     return NotFound("No pet with such ID found");
                 }
 
                 Pet petToAUpdate = PetService.CreatePet(pet.Name, pet.Type, pet.Birthdate, pet.Color, pet.Price);
-                petToAUpdate.SoldDate = pet.SoldDate;
+                petToAUpdate.SoldDate = existingPet.SoldDate;
 
                 if (pet.Owner != null)
                 {
@@ -131,6 +134,11 @@ namespace PetShop.RestAPI.Controllers
                         return NotFound("No owner with that ID found");
                     }
                     petToAUpdate.Owner = owner;
+                }
+
+                if(existingPet.Owner == null && pet.Owner != null || (pet.Owner != null && existingPet.Owner != null && existingPet.Owner.ID != pet.Owner.ID))
+                {
+                    petToAUpdate.SoldDate = DateTime.Now;
                 }
 
                 if (pet.Type.ID <= 0)
