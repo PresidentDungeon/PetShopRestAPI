@@ -51,27 +51,13 @@ namespace PetShop.Core.ApplicationService.Impl
             return PetTypeRepository.GetPetTypeByID(ID);
         }
 
-        public List<PetType> GetPetTypeByName(string searchTitle)
-        {
-            return SearchEngine.Search<PetType>(GetAllPetTypes(), searchTitle);
-        }
-
         public List<PetType> GetPetTypesFilterSearch(Filter filter)
         {
-            IEnumerable<PetType> types = PetTypeRepository.ReadTypes();
+            IEnumerable<PetType> types = PetTypeRepository.ReadTypesFilterSearch(filter);
 
             if (!string.IsNullOrEmpty(filter.Name))
             {
-                types = SearchEngine.Search<PetType>(types.ToList(), filter.Name);
-
-            }
-            if (!string.IsNullOrEmpty(filter.Sorting) && filter.Sorting.ToLower().Equals("asc"))
-            {
-                types = from x in types orderby x.Name select x;
-            }
-            else if (!string.IsNullOrEmpty(filter.Sorting) && filter.Sorting.ToLower().Equals("desc"))
-            {
-                types = from x in types orderby x.Name descending select x;
+                return SearchEngine.Search<PetType>(types.ToList(), filter.Name);
             }
 
             return types.ToList();

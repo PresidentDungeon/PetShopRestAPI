@@ -31,6 +31,22 @@ namespace PetShop.Infrastructure.Data
             return PetTypes;
         }
 
+        public IEnumerable<PetType> ReadTypesFilterSearch(Filter filter)
+        {
+            IEnumerable<PetType> types = this.PetTypes;
+
+            if (!string.IsNullOrEmpty(filter.Sorting) && filter.Sorting.ToLower().Equals("asc"))
+            {
+                types = from x in types orderby x.Name select x;
+            }
+            else if (!string.IsNullOrEmpty(filter.Sorting) && filter.Sorting.ToLower().Equals("desc"))
+            {
+                types = from x in types orderby x.Name descending select x;
+            }
+
+            return types;
+        }
+
         public PetType GetPetTypeByID(int ID)
         {
             return ReadTypes().Where((x) => { return x.ID == ID; }).FirstOrDefault();

@@ -31,6 +31,22 @@ namespace PetShop.Infrastructure.Data
             return Owners;
         }
 
+        public IEnumerable<Owner> ReadOwnersFilterSearch(Filter filter)
+        {
+            IEnumerable<Owner> owners = this.Owners;
+
+            if (!string.IsNullOrEmpty(filter.Sorting) && filter.Sorting.ToLower().Equals("asc"))
+            {
+                owners = from x in owners orderby x.FirstName + x.LastName select x;
+            }
+            else if (!string.IsNullOrEmpty(filter.Sorting) && filter.Sorting.ToLower().Equals("desc"))
+            {
+                owners = from x in owners orderby x.FirstName + x.LastName descending select x;
+            }
+
+            return owners;
+        }
+
         public Owner GetOwnerByID(int ID)
         {
             return ReadOwners().Where((x) => { return x.ID == ID; }).FirstOrDefault();

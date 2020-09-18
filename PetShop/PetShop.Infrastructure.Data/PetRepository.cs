@@ -30,6 +30,26 @@ namespace PetShop.Infrastructure.Data
             return Pets;
         }
 
+        public IEnumerable<Pet> ReadPetsFilterSearch(Filter filter)
+        {
+            IEnumerable<Pet> pets = this.Pets;
+
+            if (!string.IsNullOrEmpty(filter.PetType))
+            {
+                pets = from x in pets where x.Type.Name.ToLower().Equals(filter.PetType.ToLower()) select x;
+            }
+            if (!string.IsNullOrEmpty(filter.Sorting) && filter.Sorting.ToLower().Equals("asc"))
+            {
+                pets = from x in pets where x.Owner == null orderby x.Price select x;
+            }
+            else if (!string.IsNullOrEmpty(filter.Sorting) && filter.Sorting.ToLower().Equals("desc"))
+            {
+                pets = from x in pets where x.Owner == null orderby x.Price descending select x;
+            }
+
+            return pets.AsEnumerable();
+        }
+
         public Pet GetPetByID(int ID)
         {
             return ReadPets().Where((x) => { return x.ID == ID; }).FirstOrDefault();

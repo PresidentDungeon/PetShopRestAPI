@@ -13,19 +13,9 @@ namespace PetShop.Core.ApplicationService
 
         List<Pet> GetAllPets();
 
-        List<Pet> GetAllPetsByPrice();
-
-        List<Pet> GetAllAvailablePetsByPrice();
+        List<Pet> GetPetsFilterSearch(Filter filter);
 
         Pet GetPetByID(int ID);
-
-        List<Pet> GetPetByType (PetType type);
-
-        List<Pet> GetPetByName(string searchTitle);
-
-        List<Pet> GetPetByBirthdate(DateTime date);
-
-        List<Pet> GetPetsFilterSearch(Filter filter);
 
         Pet UpdatePet(Pet pet, int ID);
 
